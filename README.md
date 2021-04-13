@@ -1,5 +1,7 @@
 # SpaceX Launch Stats
 
+This uses version-3 of the API.
+
 > React, GraphQL, Apollo app that uses the SpaceX API to display launches
 
 ## Quick Start
