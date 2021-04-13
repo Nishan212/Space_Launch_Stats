@@ -1,5 +1,7 @@
 # SpaceX Launch Stats
 
+This uses version-4 of the API.
+
 > React, GraphQL, Apollo app that uses the SpaceX API to display launches
 
 ## Quick Start
@@ -26,4 +28,4 @@ cd client && npm run build
 
 ## Website link
 
-[SpaceX-Launch-Stats](https://blueberry-cupcake-45324.herokuapp.com/)
+[SpaceX-Launch-Stats](https://spacex-launch-stats-v4.herokuapp.com/)
