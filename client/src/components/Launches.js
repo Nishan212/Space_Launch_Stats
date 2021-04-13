@@ -7,10 +7,12 @@ import MissionKey from "./MissionKey";
 const LAUNCHES_QUERY = gql`
 	query LaunchesQuery {
 		launches {
-			flight_number
-			mission_name
-			launch_date_local
-			launch_success
+			id
+			name
+			details
+			date_local
+			success
+			rocket
 		}
 	}
 `;
@@ -29,7 +31,7 @@ export class Launches extends Component {
 						return (
 							<Fragment>
 								{data.launches.map((launch) => (
-									<LaunchItem key={launch.flight_number} launch={launch} />
+									<LaunchItem key={launch.id} launch={launch} />
 								))}
 							</Fragment>
 						);

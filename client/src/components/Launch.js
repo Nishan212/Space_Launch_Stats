@@ -5,78 +5,86 @@ import { Link } from "react-router-dom";
 import classNames from "classnames";
 
 const LAUNCH_QUERY = gql`
-	query LaunchQuery($flight_number: Int!) {
-		launch(flight_number: $flight_number) {
-			flight_number
-			mission_name
-			launch_year
-			launch_date_local
-			launch_success
-			rocket {
-				rocket_id
-				rocket_name
-				rocket_type
-			}
+	query LaunchQuery($id: String!) {
+		launch(id: $id) {
+			id
+			name
+			details
+			date_local
+			success
+			rocket
+		}
+	}
+`;
+
+const ROCKET_QUERY = gql`
+	query RocketQuery($rocket: String!) {
+		rocket(id: $rocket) {
+			id
+			name
+			description
 		}
 	}
 `;
 
 export class Launch extends Component {
 	render() {
-		let { flight_number } = this.props.match.params;
-		flight_number = parseInt(flight_number);
+		let { id } = this.props.match.params;
 
 		return (
 			<Fragment>
-				<Query query={LAUNCH_QUERY} variables={{ flight_number }}>
+				<Query query={LAUNCH_QUERY} variables={{ id }}>
 					{({ loading, error, data }) => {
 						if (loading) return <h4>Loading...</h4>;
 						if (error) console.log(error);
 
-						const {
-							mission_name,
-							flight_number,
-							launch_year,
-							launch_success,
-							rocket: { rocket_id, rocket_name, rocket_type },
-						} = data.launch;
+						const { name, details, date_local, success, rocket } = data.launch;
 
 						return (
 							<div>
 								<h1 className="display-4 my-3">
-									<span className="text-dark">Mission:</span> {mission_name}
+									<span className="text-dark">Mission:</span> {name}
 								</h1>
 								<h4 className="mb-3">Launch Details</h4>
 								<ul className="list-group">
 									<li className="list-group-item">
-										Flight Number: {flight_number}
-									</li>
-									<li className="list-group-item">
-										Launch Year: {launch_year}
+										Launch Year: {new Date(date_local).getFullYear()}
 									</li>
 									<li className="list-group-item">
 										Launch Successful:{" "}
 										<span
 											className={classNames({
-												"text-success": launch_success,
-												"text-danger": !launch_success,
+												"text-success": success,
+												"text-danger": !success,
 											})}
 										>
-											{launch_success ? "Yes" : "No"}
+											{success ? "Yes" : "No"}
 										</span>
 									</li>
+									<li className="list-group-item">Details: {details}</li>
 								</ul>
+								<hr />
+								<Query query={ROCKET_QUERY} variables={{ rocket }}>
+									{({ loading, error, data }) => {
+										if (loading) return <h4>Loading...</h4>;
+										if (error) console.log(error);
 
-								<h4 className="my-3">Rocket Details</h4>
-								<ul className="list-group">
-									<li className="list-group-item">Rocket ID: {rocket_id}</li>
-									<li className="list-group-item">
-										Rocket Name: {rocket_name}
-									</li>
-									<li className="list-group-item">
-										Rocket Type: {rocket_type}
-									</li>
-								</ul>
+										const { name, description } = data.rocket;
+										return (
+											<div>
+												<h4 className="mb-3">Rocket Details</h4>
+												<ul className="list-group">
+													<li className="list-group-item">
+														Rocket Name: {name}
+													</li>
+													<li className="list-group-item">
+														Description: {description}
+													</li>
+												</ul>
+											</div>
+										);
+									}}
+								</Query>
 								<hr />
 
 								<Link to="/" className="btn btn-secondary">
